@@ -17,6 +17,7 @@ abstract contract FeeOnTransfer {
 contract BunnyAI is ERC20, FeeOnTransfer {
     address public owner;
     uint256 public constant BPS = 10_000;
+    uint256 public constant MAX_FEE = 1_000; // 10%
 
     event OwnershipTransferred(address indexed owner);
 
@@ -52,7 +53,7 @@ contract BunnyAI is ERC20, FeeOnTransfer {
     }
 
     function setFee(uint256 _fee) external onlyOwner {
-        require(_fee < BPS, "BunnyAI: fee too high");
+        require(_fee < MAX_FEE, "BunnyAI: fee too high");
         fee = _fee;
         emit FeeChanged(fee);
     }

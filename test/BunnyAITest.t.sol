@@ -16,8 +16,8 @@ contract FeeOnTransferTest is BaseBunnyAITest {
 
     function testCanSetFeeAsOwner() public {
         uint256 snapBefore = vm.snapshot();
-        bunnyAI.setFee(1000);
-        require(bunnyAI.fee() == 1000, "fee is not 1000");
+        bunnyAI.setFee(500);
+        require(bunnyAI.fee() == 500, "fee is not 500");
         vm.revertTo(snapBefore);
     }
 
