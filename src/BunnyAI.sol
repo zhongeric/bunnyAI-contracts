@@ -31,7 +31,7 @@ contract BunnyAI is ERC20, FeeOnTransfer {
         exemptFromFee[msg.sender] = true;
     }
 
-    function transfer(address recipient, uint256 amount) public virtual override returns (bool) {
+    function transfer(address recipient, uint256 amount) public override returns (bool) {
         if (fee > 0 && !exemptFromFee[msg.sender]) {
             require(feeRecipient != address(0), "BunnyAI: zero fee recipient");
             uint256 feeCalc = amount * fee / BPS;
@@ -41,7 +41,7 @@ contract BunnyAI is ERC20, FeeOnTransfer {
         return super.transfer(recipient, amount);
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount) public virtual override returns (bool) {
+    function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
         if (fee > 0 && !exemptFromFee[sender]) {
             require(feeRecipient != address(0), "BunnyAI: zero fee recipient");
             uint256 feeCalc = amount * fee / BPS;
