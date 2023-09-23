@@ -46,7 +46,7 @@ contract FeeOnTransferTest is BaseBunnyAITest {
     }
 
     function testCanTransferWithFee(uint256 amount) public {
-        vm.assume(amount < type(uint256).max / bunnyAI.fee());
+        vm.assume(amount < bunnyAI.maxSupply() - bunnyAI.totalSupply());
         uint256 snapshot = vm.snapshot();
         bunnyAI.mint(alice, amount);
         uint256 balanceBefore = bunnyAI.balanceOf(address(this));
@@ -61,7 +61,7 @@ contract FeeOnTransferTest is BaseBunnyAITest {
     }
 
     function testCanTransferFromWithFee(uint256 amount) public {
-        vm.assume(amount < type(uint256).max / bunnyAI.fee());
+        vm.assume(amount < bunnyAI.maxSupply() - bunnyAI.totalSupply());
         uint256 snapshot = vm.snapshot();
         bunnyAI.mint(alice, amount);
         uint256 aliceBalanceBefore = bunnyAI.balanceOf(alice);

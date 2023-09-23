@@ -48,6 +48,7 @@ contract BaseBunnyAITest is Test {
     }
 
     function testTransfer(uint256 amount) public {
+        vm.assume(amount < bunnyAI.maxSupply() - bunnyAI.totalSupply());
         // ensure no fee on transfer
         bunnyAI.setFee(0);
         vm.assume(amount < type(uint256).max - bunnyAI.totalSupply());
@@ -61,6 +62,7 @@ contract BaseBunnyAITest is Test {
     }
 
     function testTransferFrom(uint256 amount) public {
+        vm.assume(amount < bunnyAI.maxSupply() - bunnyAI.totalSupply());
         // ensure no fee on transfer
         bunnyAI.setFee(0);
         vm.assume(amount < type(uint256).max - bunnyAI.totalSupply());

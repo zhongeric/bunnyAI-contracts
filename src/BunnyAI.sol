@@ -18,6 +18,7 @@ contract BunnyAI is ERC20, FeeOnTransfer {
     address public owner;
     uint256 public constant BPS = 10_000;
     uint256 public constant MAX_FEE = 1_000; // 10%
+    uint256 public constant maxSupply = 1_000_000_000 * 10 ** 18; // 1 billion
 
     event OwnershipTransferred(address indexed owner);
 
@@ -69,6 +70,7 @@ contract BunnyAI is ERC20, FeeOnTransfer {
     }
 
     function mint(address _to, uint256 _amount) external onlyOwner {
+        require(totalSupply + _amount <= maxSupply, "BunnyAI: max supply reached");
         _mint(_to, _amount);
     }
 
