@@ -33,13 +33,10 @@ contract BunnyAIController {
         emit OwnershipTransferred(owner);
     }
 
-    function redeem(uint256 amount) external {
-        require(amount > 0, "BunnyAIController: amount is zero");
-        uint256 balance = IERC20(token).balanceOf(msg.sender);
-        require(balance >= amount, "BunnyAIController: insufficient balance");
-        IERC20(token).transferFrom(msg.sender, address(this), amount);
-        uint256 baseCurrencyAmount = amount / exchangeRate;
-        IERC20(baseCurrency).transfer(msg.sender, baseCurrencyAmount);
+    function redeem(uint256 amountOut) external {
+        uint256 amountIn = amountOut * exchangeRate;
+        IERC20(token).transferFrom(msg.sender, address(this), amountIn);
+        IERC20(baseCurrency).transfer(msg.sender, amountOut);
     }
 
     function setExchangeRate(uint256 _exchangeRate) external onlyOwner {

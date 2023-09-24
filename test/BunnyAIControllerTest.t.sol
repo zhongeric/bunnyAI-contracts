@@ -33,12 +33,13 @@ contract BunnyAIControllerTest is Test {
 
     function testRedeem() public {
         uint256 snapStart = vm.snapshot();
-        bunnyAI.mint(alice, ONE * 100);
+        uint256 amountIn = ONE * 100;
+        bunnyAI.mint(alice, amountIn);
         uint256 balanceBefore = bunnyAI.balanceOf(alice);
 
         vm.startPrank(alice);
-        bunnyAI.approve(address(controller), ONE * 100);
-        controller.redeem(ONE * 100);
+        bunnyAI.approve(address(controller), amountIn);
+        controller.redeem(ONE);
         vm.stopPrank();
         // now alice should have 1 stablecoin
         require(mockStablecoin.balanceOf(alice) == ONE, "balanceOf alice");
@@ -52,20 +53,21 @@ contract BunnyAIControllerTest is Test {
     }
 
     function testRedeemFuzz(uint256 amount) public {
-        vm.assume(amount > ONE);
+        vm.assume(amount > ONE && amount < 1_000_000_000 * ONE);
+        uint256 amountIn = amount * 100;
         uint256 snapStart = vm.snapshot();
-        bunnyAI.mint(alice, amount);
+        bunnyAI.mint(alice, amountIn);
         uint256 balanceBefore = bunnyAI.balanceOf(alice);
 
         vm.startPrank(alice);
-        bunnyAI.approve(address(controller), amount);
+        bunnyAI.approve(address(controller), amountIn);
         controller.redeem(amount);
         vm.stopPrank();
-        uint256 expectedAmountOut = amount / 100;
-        uint256 expectedFee = expectedAmountOut * 500 / 10_000;
-        require(mockStablecoin.balanceOf(alice) == expectedAmountOut, "balanceOf alice");
+
+        uint256 expectedFee = amountIn * 500 / 10_000;
+        require(mockStablecoin.balanceOf(alice) == amount, "balanceOf alice");
         require(bunnyAI.balanceOf(alice) == 0, "balanceOf alice");
-        require(bunnyAI.balanceOf(address(controller)) == amount - expectedFee, "balanceOf controller");
+        require(bunnyAI.balanceOf(address(controller)) == amountIn - expectedFee, "balanceOf controller");
         require(bunnyAI.balanceOf(feeRecipient) == expectedFee, "balanceOf feeRecipient");
         vm.revertTo(snapStart);
     }
